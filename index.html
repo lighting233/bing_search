@@ -10,9 +10,9 @@
 <div class="bg-div">
     <div class="search-box clearfix">
         <div class="logo"></div>
-        <form action="" id="search_form" target="_blank">
-            <input type="search" class="search-input-text" id="search_input">
-            <input type="submit" class="search-input-submit" value="">
+        <form action="https://cn.bing.com/search" id="search_form" target="_blank" autocomplete="off">
+            <input type="search" class="search-input-text" id="search_input" name="q">
+            <input type="submit" class="search-input-submit" value="" id="search_submit">
         </form>
     </div>
 </div>
@@ -24,7 +24,7 @@
 <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#search_input').bind('keyup',function () {
+        $('#search_input').on('keyup',function () {
             var searchText = $('#search_input').val();
             $.ajax({
                 type: 'GET',
@@ -50,9 +50,15 @@
             });
         });
 
-        $(document).bind('click',function () {
+        $(document).on('click',function () {
             $('#search_suggest').hide();
+        });
+
+        $('#search_suggest').on('click','li',function () {
+            var keyword = $(this).text();
+            location.href = 'http://cn.bing.com/search?q=' + keyword;
         })
+
     })
 </script>
 </body>

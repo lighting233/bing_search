@@ -59,6 +59,7 @@ form{
     width: 29px;
     height: 29px;
     float: left;
+    outline: none;
 }
 
 .suggest{
