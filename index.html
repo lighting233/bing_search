@@ -26,19 +26,19 @@
 
     //    jq编写
 
-     $(document).ready(function () {
-     $('#search_input').on('keyup',function () {
+    /* $(document).ready(function () {
+     $('#search_input').on('keyup', function () {
      var searchText = $('#search_input').val();
      $.ajax({
      type: 'GET',
-     url:'http://api.bing.com/qsonhs.aspx?type=cb&cb=a&q='+searchText,
-     dataType:'jsonp',
-     jsonp:'cb',
-     success: function(data) {
+     url: 'http://api.bing.com/qsonhs.aspx?type=cb&cb=a&q=' + searchText,
+     dataType: 'jsonp',
+     jsonp: 'cb',
+     success: function (data) {
      var data = data.AS.Results[0].Suggests;
      var html = '';
      for (var i = 0; i < data.length; i++) {
-     html += '<li>'+data[i].Txt+'</li>';
+     html += '<li>' + data[i].Txt + '</li>';
      }
      $('#search_result').html(html)
      $('#search_suggest').show().css({
@@ -47,26 +47,26 @@
      position: 'absolute'
      });
      },
-     error: function(jqXHR){
-     alert('错误：'+jqXHR.status)
+     error: function (jqXHR) {
+     alert('错误：' + jqXHR.status)
      }
      });
      });
 
-     $(document).on('click',function () {
+     $(document).on('click', function () {
      $('#search_suggest').hide();
      });
 
-     $('#search_suggest').on('click','li',function () {
+     $('#search_suggest').on('click', 'li', function () {
      var keyword = $(this).text();
      location.href = 'http://cn.bing.com/search?q=' + keyword;
      })
 
-     })
+     })*/
 
     //   js编写
 
-    /*var getDom = function (id) {
+/*    var getDom = function (id) {
         return document.getElementById(id);
     };
 
@@ -79,9 +79,9 @@
         }
     };
 
-    function deletgateEvent(target,event,fn) {
-        addEvent(document,event,function (e) {
-            if(e.target.nodeName == target.toUpperCase()){
+    function deletgateEvent(target, event, fn) {
+        addEvent(document, event, function (e) {
+            if (e.target.nodeName == target.toUpperCase()) {
                 fn.call(e.target);
             }
         });
@@ -111,24 +111,24 @@
 
     var ajaxGet = function (url, callback) {
         var xhr = null;
-        if (window.XMLHttpRequest){
+        if (window.XMLHttpRequest) {
             xhr = new window.XMLHttpRequest();
-        }else if(window.ActiveXObject){
+        } else if (window.ActiveXObject) {
             xhr = new ActiveXObject('MSXML2.XMLHttp');
         }
         xhr.onreadystatechange = function () {
-            if(xhr.readyState == 4 && xhr.status == 200){
+            if (xhr.readyState == 4 && xhr.status == 200) {
                 callback(JSON.parse(xhr.responseText));
             }
         }
-        xhr.open('get',url,true);
+        xhr.open('get', url, true);
         xhr.send(null);
 
     }
 
-    addEvent('search_input','keyup',function () {
+    addEvent('search_input', 'keyup', function () {
         var searchText = getDom('search_input').value;
-        ajaxGet('http://api.bing.com/qsonhs.aspx?'+searchText,function(data){
+        ajaxGet('http://api.bing.com/qsonhs.aspx?' + searchText, function (data) {
             var data = data.AS.Results[0].Suggests;
             var html = '';
             for (var i = 0; i < data.length; i++) {
@@ -136,18 +136,87 @@
             }
             var _dom = getDom('search_suggest');
             getDom('search_result').innerHTML = html;
-            _dom.style.left = getElementLeft(getDom('search_form'))+'px';
-            _dom.style.top = getElementTop(getDom('search_form'))+getDom('search_form').offsetHeight+ 1 +'px';
+            _dom.style.left = getElementLeft(getDom('search_form')) + 'px';
+            _dom.style.top = getElementTop(getDom('search_form')) + getDom('search_form').offsetHeight + 1 + 'px';
             _dom.style.position = 'absolute';
             _dom.style.display = 'block';
         });
 
     });
 
-    deletgateEvent('li','click',function () {
+    deletgateEvent('li', 'click', function () {
         var keyword = this.innerHTML;
         location.href = 'http://cn.bing.com/search?q=' + keyword;
     })*/
+
+    var getDom = function (id) {
+        return document.getElementById(id);
+    };
+
+    var addEvent = function (id, event, fn) {
+        var el = getDom(id) || document;
+        if (el.addEventListener) {
+            el.addEventListener(event, fn, false);
+        } else if (el.attachEvent) {
+            el.attachEvent('on' + event, fn);
+        }
+    };
+
+    var getElementLeft = function (element) {
+        var actualLeft = element.offsetLeft;
+        var current = element.offsetParent;
+
+        while (current != null) {
+            actualLeft += current.offsetLeft;
+            current = current.offsetParent;
+        }
+        return actualLeft;
+    };
+
+    var getElementTop = function (element) {
+        var actualTop = element.offsetTop;
+        var current = element.offsetParent;
+
+        while (current != null) {
+            actualTop += current.offsetTop;
+            current = current.offsetParent;
+        }
+        return actualTop;
+    }
+
+    function getData(data) {
+        var data = data.AS.Results[0].Suggests;
+        var _dom = getDom('search_suggest');
+        if(data.length){
+            var html = '';
+            for (var i = 0; i < data.length; i++) {
+                html += '<li><a href="http://cn.bing.com/search?q=' + data[i].Txt+'">' + data[i].Txt + '</a></li>';
+            }
+
+            getDom('search_result').innerHTML = html;
+            _dom.style.left = getElementLeft(getDom('search_form')) + 'px';
+            _dom.style.top = getElementTop(getDom('search_form')) + getDom('search_form').offsetHeight + 1 + 'px';
+            _dom.style.position = 'absolute';
+            _dom.style.display = 'block';
+        }else {
+            _dom.style.display = 'none';
+        }
+    }
+
+    window.onload = function () {
+
+        addEvent('search_input', 'keyup', function () {
+
+            if(this.value != ''){
+                var oScript = document.createElement('script');
+                oScript.src = 'http://api.bing.com/qsonhs.aspx?type=cb&cb=getData&q=' + this.value;
+                document.body.appendChild(oScript);
+            }else {
+                getDom('search_suggest').style.display = 'none';
+            }
+
+        });
+    }
 
 </script>
 </body>

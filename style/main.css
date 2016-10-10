@@ -85,3 +85,8 @@ form{
     text-decoration: underline;
     background-color: #e5e5e5;
 }
+
+.suggest ul li a{
+    text-decoration: none;
+    color: #000;
+}
