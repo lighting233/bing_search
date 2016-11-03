@@ -182,7 +182,7 @@
             current = current.offsetParent;
         }
         return actualTop;
-    }
+    };
 
     function getData(data) {
         var data = data.AS.Results[0].Suggests;
@@ -216,6 +216,11 @@
             }
 
         });
+
+        document.onclick = function () {
+            getDom('search_suggest').style.display = 'none';
+        };
+
     }
 
 </script>
